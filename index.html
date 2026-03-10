@@ -8,18 +8,16 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="조각모음">
-<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%23FFB7B2%22/><text y=%2254%22 x=%2250%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-size=%2250%22>✨</text></svg>">
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="apple-touch-icon" href="icon.png"> <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Gamja+Flower&display=swap" rel="stylesheet">
 <style>
   :root {
-    --primary: #FFB7B2; /* 부드러운 파스텔 핑크 */
+    --primary: #FFB7B2; 
     --primary-dark: #FF9E99;
-    --bg-start: #FFDEE9; /* 아이폰 감성 파스텔 그라데이션 */
+    --bg-start: #FFDEE9; 
     --bg-end: #B5FFFC;
-    --card-bg: rgba(255, 255, 255, 0.85); /* 살짝 투명한 카드 */
+    --card-bg: rgba(255, 255, 255, 0.85); 
     --text-main: #4A4A4A;
     --text-muted: #8E8E93;
     --danger: #FF6B6B;
@@ -27,20 +25,17 @@
   }
   
   body { 
-    /* 💡 귀여운 글씨체 적용 */
     font-family: 'Gamja Flower', -apple-system, sans-serif;
-    font-size: 1.2rem; /* 글씨체가 작아 보일 수 있어 조금 키웠어 */
+    font-size: 1.2rem; 
     max-width: 500px; 
     margin: 0 auto; 
     padding: 20px; 
-    /* 💡 감성적인 그라데이션 배경 */
     background-image: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-end) 100%);
     background-attachment: fixed;
     color: var(--text-main);
     -webkit-tap-highlight-color: transparent;
   }
   
-  /* 헤더 (제목 변경) */
   .header-container {
     display: flex;
     justify-content: space-between;
@@ -62,19 +57,17 @@
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
   }
 
-  /* 서브 제목 변경 */
   h2 { font-size: 1.4rem; border-bottom: 2px dashed var(--primary); padding-bottom: 8px; margin-top: 0; color: #6D6D6D; }
   
   .card { 
     background: var(--card-bg); 
     padding: 25px; 
-    border-radius: 25px; /* 더 둥글둥글하게 */
-    box-shadow: 0 10px 20px rgba(0,0,0,0.05); /* 부드러운 그림자 */
+    border-radius: 25px; 
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05); 
     margin-bottom: 25px; 
-    backdrop-filter: blur(5px); /* 배경 흐림 효과 (아이폰 스타일) */
+    backdrop-filter: blur(5px); 
   }
   
-  /* 오늘의 조각 리스트 */
   .routine-item { 
     display: flex; 
     align-items: center; 
@@ -87,11 +80,10 @@
     width: 26px; 
     height: 26px; 
     margin-right: 18px; 
-    accent-color: var(--success); /* 초록색 체크 */
+    accent-color: var(--success); 
     cursor: pointer;
   }
 
-  /* 하단 플로팅 추가 버튼 */
   .fab-button {
     position: fixed;
     bottom: 30px;
@@ -111,7 +103,6 @@
     z-index: 100;
   }
 
-  /* 팝업(모달) 공통 스타일 */
   .modal-overlay {
     display: none;
     position: fixed;
@@ -166,7 +157,6 @@
   .btn-save { background: var(--primary); color: white; }
   .btn-save:active { background: var(--primary-dark); }
 
-  /* 관리 목록 아이템 스타일 */
   .manage-list-item {
     display: flex;
     justify-content: space-between;
@@ -192,9 +182,8 @@
     cursor: pointer;
   }
   .btn-delete { color: var(--danger); background: #FFEBEB; }
-  .btn-edit { color: #88CFFD; background: #EBF8FF; } /* 파스텔 블루 */
+  .btn-edit { color: #88CFFD; background: #EBF8FF; } 
 
-  /* 요일 선택 체크박스 스타일 */
   .day-checkboxes {
     display: flex;
     justify-content: space-between;
@@ -218,7 +207,6 @@
     accent-color: var(--primary);
   }
 
-  /* 달력 스타일 (감성 추가) */
   .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; font-weight: bold; font-size: 1.3rem; color: #6D6D6D; }
   .calendar-header button { background: none; border: none; font-size: 1.4rem; color: var(--primary-dark); cursor: pointer; padding: 5px 12px; font-family: 'Gamja Flower', sans-serif;}
   .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; text-align: center; }
@@ -226,7 +214,6 @@
   .calendar-day { background: rgba(249, 249, 249, 0.5); border-radius: 12px; min-height: 55px; display: flex; flex-direction: column; align-items: center; padding: 6px; font-size: 1rem; color: #7D7D7D; }
   .calendar-day.empty { background: transparent; }
   .date-num { font-weight: 500; margin-bottom: 3px; width: 24px; height: 24px; display: flex; justify-content: center; align-items: center;}
-  /* 오늘 날짜 표시 변경 */
   .today .date-num { background: var(--primary); color: white; border-radius: 12px; }
   .done-count { font-size: 0.8rem; color: var(--success); font-weight: bold; background: #E6F9EA; padding: 2px 8px; border-radius: 10px; margin-top: auto; }
   .holiday { color: var(--danger); }
@@ -298,7 +285,6 @@
   </div>
 
   <script>
-    // 🇰🇷 2026-2027 공휴일 리스트 (동일 유지)
     const koreanHolidays = [
       '2026-01-01', '2026-02-16', '2026-02-17', '2026-02-18', '2026-03-01', '2026-03-02', 
       '2026-05-05', '2026-05-24', '2026-05-25', '2026-06-06', '2026-08-15', '2026-08-17', 
@@ -309,7 +295,6 @@
       '2027-09-16', '2027-10-03', '2027-10-04', '2027-10-09', '2027-10-11', '2027-12-25'
     ];
 
-    // 샘플 루틴 이름도 부드럽게 변경
     let routines = JSON.parse(localStorage.getItem('myRoutines')) || [
       { id: 1, name: '따뜻한 물 한 잔 마시기 💧', type: 'everyday', createdAt: new Date().toISOString() },
       { id: 2, name: '아침 기지개 & 5분 명상 🧘‍♂️', type: 'weekdays', createdAt: new Date().toISOString() },
@@ -444,7 +429,6 @@
     }
 
     function deleteRoutine(id) {
-      // confirm 문구도 다정하게 변경
       if (confirm('정말 이 조각을 삭제하시겠습니까? 😢 (과거 완료 기록은 안전하게 남아있어요)')) {
         routines = routines.filter(r => r.id !== id);
         saveData();
@@ -457,7 +441,7 @@
       if (!r) return;
       
       editingId = id;
-      document.getElementById('modalTitle').textContent = '내 빛 수정하기 ✨'; // 제목 변경
+      document.getElementById('modalTitle').textContent = '내 빛 수정하기 ✨';
       document.getElementById('routineName').value = r.name;
       document.getElementById('routineType').value = r.type;
       
@@ -505,7 +489,6 @@
 
       todaysRoutines.forEach(r => {
         const isChecked = history[isoDate] && history[isoDate].includes(r.id);
-        // 체크했을 때 파스텔 핑크색 취소선으로 변경
         listDiv.innerHTML += `
           <label class="routine-item">
             <input type="checkbox" onchange="toggleRoutine(${r.id})" ${isChecked ? 'checked' : ''}>
@@ -528,7 +511,7 @@
       grid.innerHTML = '';
 
       const days = ['일', '월', '화', '수', '목', '금', '토'];
-      days.forEach(d => grid.innerHTML += `<div class="day-name holiday">${d}</div>`); // 요일 이름도 빨간색으로 살짝
+      days.forEach(d => grid.innerHTML += `<div class="day-name holiday">${d}</div>`); 
 
       const firstDay = new Date(currentYear, currentMonth, 1).getDay();
       const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
@@ -562,4 +545,3 @@
   </script>
 </body>
 </html>
-
