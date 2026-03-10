@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>오늘의 조각 모음 ✨</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gamja+Flower&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #FFB7B2; /* 부드러운 파스텔 핑크 */
+    --primary-dark: #FF9E99;
+    --bg-start: #FFDEE9; /* 아이폰 감성 파스텔 그라데이션 */
+    --bg-end: #B5FFFC;
+    --card-bg: rgba(255, 255, 255, 0.85); /* 살짝 투명한 카드 */
+    --text-main: #4A4A4A;
+    --text-muted: #8E8E93;
+    --danger: #FF6B6B;
+    --success: #6BCB77;
+  }
+  
+  body { 
+    /* 💡 귀여운 글씨체 적용 */
+    font-family: 'Gamja Flower', -apple-system, sans-serif;
+    font-size: 1.2rem; /* 글씨체가 작아 보일 수 있어 조금 키웠어 */
+    max-width: 500px; 
+    margin: 0 auto; 
+    padding: 20px; 
+    /* 💡 감성적인 그라데이션 배경 */
+    background-image: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-end) 100%);
+    background-attachment: fixed;
+    color: var(--text-main);
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  /* 헤더 (제목 변경) */
+  .header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding: 0 5px;
+  }
+  h1 { font-size: 1.8rem; margin: 0; color: #5D5D5D; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
+  .btn-manage {
+    background: var(--card-bg);
+    border: 2px solid var(--primary);
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-family: 'Gamja Flower', sans-serif;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    color: var(--primary-dark);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  }
+
+  /* 서브 제목 변경 */
+  h2 { font-size: 1.4rem; border-bottom: 2px dashed var(--primary); padding-bottom: 8px; margin-top: 0; color: #6D6D6D; }
+  
+  .card { 
+    background: var(--card-bg); 
+    padding: 25px; 
+    border-radius: 25px; /* 더 둥글둥글하게 */
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05); /* 부드러운 그림자 */
+    margin-bottom: 25px; 
+    backdrop-filter: blur(5px); /* 배경 흐림 효과 (아이폰 스타일) */
+  }
+  
+  /* 오늘의 조각 리스트 */
+  .routine-item { 
+    display: flex; 
+    align-items: center; 
+    padding: 15px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    cursor: pointer;
+  }
+  .routine-item:last-child { border-bottom: none; }
+  .routine-item input[type="checkbox"] { 
+    width: 26px; 
+    height: 26px; 
+    margin-right: 18px; 
+    accent-color: var(--success); /* 초록색 체크 */
+    cursor: pointer;
+  }
+
+  /* 하단 플로팅 추가 버튼 */
+  .fab-button {
+    position: fixed;
+    bottom: 30px;
+    right: 50%;
+    transform: translateX(50%);
+    background-color: var(--primary);
+    color: white;
+    width: 65px;
+    height: 65px;
+    border-radius: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 35px;
+    box-shadow: 0 5px 15px rgba(255, 183, 178, 0.5);
+    cursor: pointer;
+    z-index: 100;
+  }
+
+  /* 팝업(모달) 공통 스타일 */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.4);
+    z-index: 200;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(3px);
+  }
+  .modal-content {
+    background: white;
+    width: 90%;
+    max-width: 400px;
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: 30px;
+    border-radius: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+  }
+  .modal-content input[type="text"], .modal-content select {
+    padding: 15px;
+    border: 2px solid #F2F2F2;
+    border-radius: 15px;
+    font-family: 'Gamja Flower', sans-serif;
+    font-size: 1.1rem;
+    width: 100%;
+    box-sizing: border-box;
+    color: var(--text-main);
+  }
+  .modal-content input[type="text"]:focus, .modal-content select:focus {
+    border-color: var(--primary);
+    outline: none;
+  }
+  
+  .modal-buttons { display: flex; gap: 12px; margin-top: 15px; }
+  .modal-buttons button {
+    flex: 1;
+    padding: 15px;
+    border-radius: 15px;
+    border: none;
+    font-family: 'Gamja Flower', sans-serif;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-cancel { background: #F2F2F2; color: #6D6D6D; }
+  .btn-save { background: var(--primary); color: white; }
+  .btn-save:active { background: var(--primary-dark); }
+
+  /* 관리 목록 아이템 스타일 */
+  .manage-list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 0;
+    border-bottom: 1px solid #F2F2F2;
+  }
+  .manage-info { flex: 1; margin-right: 15px; }
+  .manage-name { font-weight: bold; font-size: 1.2rem; margin-bottom: 5px; color: #5D5D5D; }
+  .manage-type { font-size: 1rem; color: var(--text-muted); }
+  
+  .manage-actions { display: flex; gap: 8px; }
+  .action-btn {
+    background: #F9F9F9;
+    border: none;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.1rem;
+    cursor: pointer;
+  }
+  .btn-delete { color: var(--danger); background: #FFEBEB; }
+  .btn-edit { color: #88CFFD; background: #EBF8FF; } /* 파스텔 블루 */
+
+  /* 요일 선택 체크박스 스타일 */
+  .day-checkboxes {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 8px;
+    background: #F9F9F9;
+    border-radius: 15px;
+  }
+  .day-checkboxes label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--text-main);
+  }
+  .day-checkboxes input[type="checkbox"] {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 6px;
+    accent-color: var(--primary);
+  }
+
+  /* 달력 스타일 (감성 추가) */
+  .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; font-weight: bold; font-size: 1.3rem; color: #6D6D6D; }
+  .calendar-header button { background: none; border: none; font-size: 1.4rem; color: var(--primary-dark); cursor: pointer; padding: 5px 12px; font-family: 'Gamja Flower', sans-serif;}
+  .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; text-align: center; }
+  .day-name { font-size: 0.9rem; color: var(--text-muted); padding-bottom: 8px; }
+  .calendar-day { background: rgba(249, 249, 249, 0.5); border-radius: 12px; min-height: 55px; display: flex; flex-direction: column; align-items: center; padding: 6px; font-size: 1rem; color: #7D7D7D; }
+  .calendar-day.empty { background: transparent; }
+  .date-num { font-weight: 500; margin-bottom: 3px; width: 24px; height: 24px; display: flex; justify-content: center; align-items: center;}
+  /* 오늘 날짜 표시 변경 */
+  .today .date-num { background: var(--primary); color: white; border-radius: 12px; }
+  .done-count { font-size: 0.8rem; color: var(--success); font-weight: bold; background: #E6F9EA; padding: 2px 8px; border-radius: 10px; margin-top: auto; }
+  .holiday { color: var(--danger); }
+</style>
+</head>
+<body>
+
+  <div class="header-container">
+    <h1>오늘의 조각 모음 ✨</h1>
+    <button class="btn-manage" onclick="openManageModal()">설정 ⚙️</button>
+  </div>
+
+  <div class="card">
+    <h2>반짝이는 오늘 (<span id="todayDate"></span>)</h2>
+    <div id="routineList"></div>
+  </div>
+
+  <div class="card" style="margin-bottom: 110px;">
+    <h2>이번 달 나의 의지력 🗓️</h2>
+    <div class="calendar-header">
+      <button onclick="changeMonth(-1)">◀</button>
+      <span id="calendarMonthYear"></span>
+      <button onclick="changeMonth(1)">▶</button>
+    </div>
+    <div class="calendar-grid" id="calendarGrid"></div>
+  </div>
+
+  <div class="fab-button" onclick="openAddModal()">+</div>
+
+  <div class="modal-overlay" id="addModal">
+    <div class="modal-content">
+      <h3 style="margin: 0; text-align: center; font-size: 1.5rem; color: #5D5D5D;" id="modalTitle">새로운 빛 추가하기 💡</h3>
+      <input type="text" id="routineName" placeholder="무엇을 해볼까요? (예: 책 5장 읽기)">
+      
+      <select id="routineType" onchange="toggleCustomDays()">
+        <option value="everyday">매일 꼬박꼬박 ☀️</option>
+        <option value="weekdays">평일에만 열심히 🏃‍♂️</option>
+        <option value="custom">요일 골라보기 🗓️</option>
+        <option value="even">짝수 날에만</option>
+        <option value="odd">홀수 날에만</option>
+      </select>
+
+      <div id="customDaysDiv" style="display: none; flex-direction: column; gap: 8px;">
+        <span style="font-size: 1rem; color: var(--text-muted); text-align: center;">어떤 요일에 할까요?</span>
+        <div class="day-checkboxes">
+          <label><input type="checkbox" value="1" class="day-chk"> 월</label>
+          <label><input type="checkbox" value="2" class="day-chk"> 화</label>
+          <label><input type="checkbox" value="3" class="day-chk"> 수</label>
+          <label><input type="checkbox" value="4" class="day-chk"> 목</label>
+          <label><input type="checkbox" value="5" class="day-chk"> 금</label>
+          <label><input type="checkbox" value="6" class="day-chk"> 토</label>
+          <label><input type="checkbox" value="0" class="day-chk"> 일</label>
+        </div>
+      </div>
+
+      <div class="modal-buttons">
+        <button class="btn-cancel" onclick="closeAddModal()">잠시 닫기</button>
+        <button class="btn-save" onclick="saveRoutine()">저장하기!</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="manageModal">
+    <div class="modal-content">
+      <h3 style="margin: 0; text-align: center; font-size: 1.5rem; color: #5D5D5D; border-bottom: 2px dashed var(--primary); padding-bottom: 15px;">내 빛 조절하기 ⚙️</h3>
+      <div id="manageListContainer" style="display: flex; flex-direction: column; gap: 8px;"></div>
+      <button class="btn-cancel" style="width: 100%; margin-top: 15px; font-size: 1.2rem;" onclick="closeManageModal()">돌아가기</button>
+    </div>
+  </div>
+
+  <script>
+    // 🇰🇷 2026-2027 공휴일 리스트 (동일 유지)
+    const koreanHolidays = [
+      '2026-01-01', '2026-02-16', '2026-02-17', '2026-02-18', '2026-03-01', '2026-03-02', 
+      '2026-05-05', '2026-05-24', '2026-05-25', '2026-06-06', '2026-08-15', '2026-08-17', 
+      '2026-09-24', '2026-09-25', '2026-09-26', '2026-09-28', '2026-10-03', '2026-10-05', 
+      '2026-10-09', '2026-12-25',
+      '2027-01-01', '2027-02-06', '2027-02-07', '2027-02-08', '2027-03-01', '2027-05-05',
+      '2027-05-13', '2027-06-06', '2027-08-15', '2027-08-16', '2027-09-14', '2027-09-15',
+      '2027-09-16', '2027-10-03', '2027-10-04', '2027-10-09', '2027-10-11', '2027-12-25'
+    ];
+
+    // 샘플 루틴 이름도 부드럽게 변경
+    let routines = JSON.parse(localStorage.getItem('myRoutines')) || [
+      { id: 1, name: '따뜻한 물 한 잔 마시기 💧', type: 'everyday', createdAt: new Date().toISOString() },
+      { id: 2, name: '아침 기지개 & 5분 명상 🧘‍♂️', type: 'weekdays', createdAt: new Date().toISOString() },
+      { id: 3, name: '좋아하는 책 읽기 📖', type: 'custom', customDays: [1, 3, 5, 6], createdAt: new Date().toISOString() }
+    ];
+    let history = JSON.parse(localStorage.getItem('routineHistory')) || {}; 
+    
+    let editingId = null;
+
+    const today = new Date();
+    const isoDate = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+    
+    let currentYear = today.getFullYear();
+    let currentMonth = today.getMonth();
+
+    const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
+    document.getElementById('todayDate').textContent = `${today.getMonth() + 1}월 ${today.getDate()}일(${dayNames[today.getDay()]})`;
+
+    function saveData() {
+      localStorage.setItem('myRoutines', JSON.stringify(routines));
+      localStorage.setItem('routineHistory', JSON.stringify(history));
+      renderTodayRoutines();
+      renderCalendar();
+    }
+
+    function toggleCustomDays() {
+      const type = document.getElementById('routineType').value;
+      document.getElementById('customDaysDiv').style.display = (type === 'custom') ? 'flex' : 'none';
+    }
+
+    function openAddModal() {
+      editingId = null;
+      document.getElementById('modalTitle').textContent = '새로운 빛 추가하기 💡';
+      document.getElementById('routineName').value = '';
+      document.getElementById('routineType').value = 'everyday';
+      document.querySelectorAll('.day-chk').forEach(chk => chk.checked = false);
+      toggleCustomDays();
+      document.getElementById('addModal').style.display = 'flex';
+    }
+
+    function closeAddModal() {
+      document.getElementById('addModal').style.display = 'none';
+    }
+
+    function saveRoutine() {
+      const name = document.getElementById('routineName').value.trim();
+      const type = document.getElementById('routineType').value;
+      if (!name) return alert('무엇을 할지 이름을 지어주세요! 😊');
+      
+      let customDays = [];
+      if (type === 'custom') {
+        document.querySelectorAll('.day-chk').forEach(chk => {
+          if (chk.checked) customDays.push(parseInt(chk.value));
+        });
+        if (customDays.length === 0) return alert('최소 하루 이상의 요일을 골라주세요! 🗓️');
+      }
+
+      if (editingId) {
+        const idx = routines.findIndex(r => r.id === editingId);
+        if (idx > -1) {
+          routines[idx].name = name;
+          routines[idx].type = type;
+          routines[idx].customDays = customDays;
+        }
+      } else {
+        routines.push({ id: Date.now(), name: name, type: type, customDays: customDays, createdAt: new Date().toISOString() });
+      }
+      
+      closeAddModal();
+      saveData();
+      
+      if (document.getElementById('manageModal').style.display === 'flex') {
+        renderManageList();
+      }
+    }
+
+    function openManageModal() {
+      document.getElementById('manageModal').style.display = 'flex';
+      renderManageList();
+    }
+
+    function closeManageModal() {
+      document.getElementById('manageModal').style.display = 'none';
+    }
+
+    function getTypeName(routine) {
+      if (routine.type === 'everyday') return '매일 꼬박꼬박 ☀️';
+      if (routine.type === 'weekdays') return '평일에만 열심히 🏃‍♂️';
+      if (routine.type === 'even') return '짝수 날에만';
+      if (routine.type === 'odd') return '홀수 날에만';
+      if (routine.type === 'custom') {
+        const dNames = {1:'월', 2:'화', 3:'수', 4:'목', 5:'금', 6:'토', 0:'일'};
+        return routine.customDays.map(d => dNames[d]).join(', ') + '요일';
+      }
+      return '';
+    }
+
+    function renderManageList() {
+      const container = document.getElementById('manageListContainer');
+      container.innerHTML = '';
+      
+      if (routines.length === 0) {
+        container.innerHTML = '<p style="text-align:center; color:gray; padding: 20px 0;">아직 조각이 없어요. <br> 하단의 + 버튼으로 추가해 보세요! </p>';
+        return;
+      }
+
+      routines.forEach((r, index) => {
+        container.innerHTML += `
+          <div class="manage-list-item">
+            <div class="manage-info">
+              <div class="manage-name">${r.name}</div>
+              <div class="manage-type">주기: ${getTypeName(r)}</div>
+            </div>
+            <div class="manage-actions">
+              <button class="action-btn" onclick="moveRoutine(${index}, -1)" ${index === 0 ? 'disabled style="opacity:0.2"' : ''}>▲</button>
+              <button class="action-btn" onclick="moveRoutine(${index}, 1)" ${index === routines.length - 1 ? 'disabled style="opacity:0.2"' : ''}>▼</button>
+              <button class="action-btn btn-edit" onclick="editRoutine(${r.id})">✏️</button>
+              <button class="action-btn btn-delete" onclick="deleteRoutine(${r.id})">🗑️</button>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function moveRoutine(index, direction) {
+      if (index + direction < 0 || index + direction >= routines.length) return;
+      const temp = routines[index];
+      routines[index] = routines[index + direction];
+      routines[index + direction] = temp;
+      saveData();
+      renderManageList();
+    }
+
+    function deleteRoutine(id) {
+      // confirm 문구도 다정하게 변경
+      if (confirm('정말 이 조각을 삭제하시겠습니까? 😢 (과거 완료 기록은 안전하게 남아있어요)')) {
+        routines = routines.filter(r => r.id !== id);
+        saveData();
+        renderManageList();
+      }
+    }
+
+    function editRoutine(id) {
+      const r = routines.find(r => r.id === id);
+      if (!r) return;
+      
+      editingId = id;
+      document.getElementById('modalTitle').textContent = '내 빛 수정하기 ✨'; // 제목 변경
+      document.getElementById('routineName').value = r.name;
+      document.getElementById('routineType').value = r.type;
+      
+      document.querySelectorAll('.day-chk').forEach(chk => chk.checked = false);
+      if (r.type === 'custom' && r.customDays) {
+        r.customDays.forEach(day => {
+          const chk = document.querySelector(`.day-chk[value="${day}"]`);
+          if (chk) chk.checked = true;
+        });
+      }
+      
+      toggleCustomDays();
+      document.getElementById('addModal').style.display = 'flex';
+    }
+
+    function toggleRoutine(id) {
+      if (!history[isoDate]) history[isoDate] = [];
+      const index = history[isoDate].indexOf(id);
+      if (index > -1) history[isoDate].splice(index, 1);
+      else history[isoDate].push(id);
+      saveData();
+    }
+
+    function renderTodayRoutines() {
+      const listDiv = document.getElementById('routineList');
+      listDiv.innerHTML = '';
+      
+      const dayOfWeek = today.getDay(); 
+      const dateNum = today.getDate(); 
+      const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+      const isHoliday = koreanHolidays.includes(isoDate);
+
+      const todaysRoutines = routines.filter(r => {
+        if (r.type === 'everyday') return true;
+        if (r.type === 'weekdays') return !(isWeekend || isHoliday);
+        if (r.type === 'even') return dateNum % 2 === 0; 
+        if (r.type === 'odd') return dateNum % 2 !== 0; 
+        if (r.type === 'custom') return r.customDays && r.customDays.includes(dayOfWeek);
+        return true;
+      });
+
+      if (todaysRoutines.length === 0) {
+        listDiv.innerHTML = `<p style="color:var(--text-muted); text-align:center; padding: 10px 0;">오늘은 푹 쉬어가는 날! 🎉 <br> 예정된 조각이 없습니다. </p>`;
+      }
+
+      todaysRoutines.forEach(r => {
+        const isChecked = history[isoDate] && history[isoDate].includes(r.id);
+        // 체크했을 때 파스텔 핑크색 취소선으로 변경
+        listDiv.innerHTML += `
+          <label class="routine-item">
+            <input type="checkbox" onchange="toggleRoutine(${r.id})" ${isChecked ? 'checked' : ''}>
+            <span style="${isChecked ? 'text-decoration:line-through; text-decoration-color: var(--primary); color:var(--text-muted);' : ''}">${r.name}</span>
+          </label>
+        `;
+      });
+    }
+
+    function changeMonth(delta) {
+      currentMonth += delta;
+      if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+      else if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+      renderCalendar();
+    }
+
+    function renderCalendar() {
+      document.getElementById('calendarMonthYear').textContent = `${currentYear}년 ${currentMonth + 1}월`;
+      const grid = document.getElementById('calendarGrid');
+      grid.innerHTML = '';
+
+      const days = ['일', '월', '화', '수', '목', '금', '토'];
+      days.forEach(d => grid.innerHTML += `<div class="day-name holiday">${d}</div>`); // 요일 이름도 빨간색으로 살짝
+
+      const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+      const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+      for (let i = 0; i < firstDay; i++) {
+        grid.innerHTML += `<div class="calendar-day empty"></div>`;
+      }
+
+      for (let i = 1; i <= daysInMonth; i++) {
+        const checkDate = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+        const doneCount = history[checkDate] ? history[checkDate].length : 0;
+        const isToday = checkDate === isoDate;
+        const isDayOff = koreanHolidays.includes(checkDate); 
+        const dayOfWeek = new Date(currentYear, currentMonth, i).getDay();
+        const isSunday = dayOfWeek === 0;
+
+        const dateClass = (isSunday || isDayOff) ? 'date-num holiday' : 'date-num';
+        
+        let dayHtml = `<div class="calendar-day ${isToday ? 'today' : ''}">
+                         <span class="${dateClass}">${i}</span>`;
+        if (doneCount > 0) {
+          dayHtml += `<span class="done-count">${doneCount}개</span>`;
+        }
+        dayHtml += `</div>`;
+        grid.innerHTML += dayHtml;
+      }
+    }
+
+    renderTodayRoutines();
+    renderCalendar();
+  </script>
+</body>
+</html>
